@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Paints Kenya | Premium Quality Paints in Thika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link href = "/styles/style.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2A5C99',    // Trustworthy blue
+                        secondary: '#E67E22',  // Vibrant orange
+                        accent: '#27AE60',     // Growth green
+                        neutral: '#34495E',    // Dark slate
+                        light: '#F8F9FA',      // Light background
+                        highlight: '#FFD700'   // Gold accent
+                    },
+                    fontFamily: {
+                        heading: ['Montserrat', 'sans-serif'],
+                        body: ['Inter', 'sans-serif']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+</head>
+<body class="bg-light font-body text-neutral-800">
+    <!-- Top Announcement Bar -->
+    <div class="bg-secondary text-white py-2 px-4 text-center text-sm">
+        <p>🎉 Free Color Consultation! Book Online Today | Click & Collect Available at All Branches</p>
+    </div>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header border-b">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="bg-primary text-white p-2 rounded-lg mr-3">
+                        <i class="fas fa-paint-roller text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-heading font-bold text-primary">Royal<span class="text-secondary">Colors</span></span>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="font-medium hover:text-primary transition-colors">Products</a>
+                    <a href="#" class="font-medium hover:text-primary transition-colors">Color Visualizer</a>
+                    <a href="#" class="font-medium hover:text-primary transition-colors">Inspiration</a>
+                    <a href="#" class="font-medium hover:text-primary transition-colors">For Pros</a>
+                    <a href="#" class="font-medium hover:text-primary transition-colors">Branches</a>
+                </nav>
+
+                <!-- Call to Action -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="bg-light px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-user mr-2"></i>Account
+                    </button>
+                    <button class="btn-primary px-4 py-2 rounded-lg text-white font-medium">
+                        <i class="fas fa-shopping-cart mr-2"></i>Cart (0)
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuButton" class="md:hidden text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Backdrop -->
+    <div id="menuBackdrop" class="menu-backdrop"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-y-0 right-0 w-80 bg-white shadow-xl z-50 p-6">
+        <div class="flex justify-between items-center mb-8">
+            <span class="text-2xl font-heading font-bold text-primary">Royal<span class="text-secondary">Paints</span></span>
+            <button id="closeMenu" class="text-2xl text-gray-500 hover:text-primary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="space-y-4">
+            <a href="#" class="block py-3 font-medium border-b border-gray-100 hover:text-primary transition-colors">Products</a>
+            <a href="#" class="block py-3 font-medium border-b border-gray-100 hover:text-primary transition-colors">Color Visualizer</a>
+            <a href="#" class="block py-3 font-medium border-b border-gray-100 hover:text-primary transition-colors">Inspiration</a>
+            <a href="#" class="block py-3 font-medium border-b border-gray-100 hover:text-primary transition-colors">For Pros</a>
+            <a href="#" class="block py-3 font-medium border-b border-gray-100 hover:text-primary transition-colors">Branches</a>
+            <a href="#" class="block py-3 font-medium border-b border-gray-100 hover:text-primary transition-colors">Account</a>
+            <a href="#" class="block py-3 font-medium border-b border-gray-100 hover:text-primary transition-colors">Cart (0)</a>
+        </nav>
+        <div class="mt-8">
+            <h3 class="font-heading font-bold mb-3 text-lg">Our Branches</h3>
+            <ul class="space-y-3">
+                <li class="flex items-start py-2 border-b border-gray-100">
+                    <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                    <div>
+                        <h4 class="font-medium">Thika Main Branch</h4>
+                        <p class="text-sm text-gray-600">TRM Plaza, Thika Road</p>
+                    </div>
+                </li>
+                <li class="flex items-start py-2 border-b border-gray-100">
+                    <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                    <div>
+                        <h4 class="font-medium">Nairobi Westlands</h4>
+                        <p class="text-sm text-gray-600">The Mirage, Westlands</p>
+                    </div>
+                </li>
+                <li class="flex items-start py-2 border-b border-gray-100">
+                    <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                    <div>
+                        <h4 class="font-medium">Mombasa Nyali</h4>
+                        <p class="text-sm text-gray-600">City Mall, Nyali Road</p>
+                    </div>
+                </li>
+                <li class="flex items-start py-2">
+                    <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                    <div>
+                        <h4 class="font-medium">Nakuru CBD</h4>
+                        <p class="text-sm text-gray-600">Westside Mall, Kenyatta Ave</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient py-12 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="text-white hero-content">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 leading-tight animate-fade-in">Transform Your Space with Premium Kenyan-Made Paints</h1>
+                    <p class="text-xl mb-8 opacity-90 max-w-xl animate-fade-in">High-quality paints for every surface, designed for Kenya's climate and your unique style.</p>
+                    
+                    <div class="flex flex-wrap gap-4 animate-fade-in">
+                        <button class="btn-secondary px-8 py-4 rounded-lg text-white font-bold text-lg transition-all">
+                            Shop Paints Now
+                        </button>
+                        <button class="bg-white text-primary px-8 py-4 rounded-lg font-bold text-lg transition-all hover:bg-opacity-90">
+                            Book Color Consultation
+                        </button>
+                    </div>
+                    
+                    <div class="mt-8 flex flex-wrap gap-6 animate-fade-in">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center mr-3">
+                                <i class="fas fa-medal text-accent"></i>
+                            </div>
+                            <span>9-Year Warranty</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center mr-3">
+                                <i class="fas fa-truck text-accent"></i>
+                            </div>
+                            <span>Free Delivery in Thika</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center mr-3">
+                                <i class="fas fa-store text-accent"></i>
+                            </div>
+                            <span>Click & Collect</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative animate-slide-up">
+                    <div class="color-visualizer p-6 rounded-2xl shadow-xl">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-lg text-primary">Try Our Visualizer</h3>
+                            <button class="text-primary bg-white px-4 py-2 rounded-full font-medium hover:bg-gray-50">
+                                Try Now <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                        <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                            <div class="h-64 relative" style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);">
+                                <div class="absolute bottom-0 left-0 right-0 bg-white bg-opacity-95 p-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h4 class="font-bold text-lg">Safari Sunset</h4>
+                                            <p class="text-gray-600">Matte Finish Interior Paint</p>
+                                        </div>
+                                        <div class="flex">
+                                            <div class="w-8 h-8 rounded-full border-2 border-white shadow-md mr-2" style="background-color: #E67E22;"></div>
+                                            <div class="w-8 h-8 rounded-full border-2 border-white shadow-md mr-2" style="background-color: #2A5C99;"></div>
+                                            <div class="w-8 h-8 rounded-full border-2 border-white shadow-md" style="background-color: #27AE60;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 flex justify-between items-center">
+                                <div class="text-gray-700">
+                                    <span class="font-bold text-primary">KES 3,499</span> / 4L
+                                </div>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary-dark">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Kenyan Color Trends -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Kenyan Color Trends 2024</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Inspired by Kenya's beautiful landscapes and vibrant culture</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <!-- Color 1 -->
+                <div class="color-swatch text-center p-4 rounded-xl shadow-md">
+                    <div class="w-full h-40 rounded-lg mb-4" style="background: #E67E22;"></div>
+                    <h3 class="font-bold text-lg">Safari Sunset</h3>
+                    <p class="text-gray-600">RP-1234</p>
+                </div>
+                
+                <!-- Color 2 -->
+                <div class="color-swatch text-center p-4 rounded-xl shadow-md">
+                    <div class="w-full h-40 rounded-lg mb-4" style="background: #2A5C99;"></div>
+                    <h3 class="font-bold text-lg">Indian Ocean</h3>
+                    <p class="text-gray-600">RP-5678</p>
+                </div>
+                
+                <!-- Color 3 -->
+                <div class="color-swatch text-center p-4 rounded-xl shadow-md">
+                    <div class="w-full h-40 rounded-lg mb-4" style="background: #27AE60;"></div>
+                    <h3 class="font-bold text-lg">Aberdare Forest</h3>
+                    <p class="text-gray-600">RP-9012</p>
+                </div>
+                
+                <!-- Color 4 -->
+                <div class="color-swatch text-center p-4 rounded-xl shadow-md">
+                    <div class="w-full h-40 rounded-lg mb-4" style="background: #8E44AD;"></div>
+                    <h3 class="font-bold text-lg">Jacaranda Bloom</h3>
+                    <p class="text-gray-600">RP-3456</p>
+                </div>
+                
+                <!-- Color 5 -->
+                <div class="color-swatch text-center p-4 rounded-xl shadow-md">
+                    <div class="w-full h-40 rounded-lg mb-4" style="background: #F1C40F;"></div>
+                    <h3 class="font-bold text-lg">Savanna Gold</h3>
+                    <p class="text-gray-600">RP-7890</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <button class="btn-primary px-8 py-3 rounded-lg text-white font-bold">
+                    Explore All Colors
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- User Segmentation -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Solutions Designed for You</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Whether you're a homeowner or professional contractor, we have tailored solutions to meet your painting needs.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Homeowner Card -->
+                <div class="user-segment-card bg-light p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-primary text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-home text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-heading font-bold">Homeowners</h3>
+                    </div>
+                    <p class="mb-6 text-gray-700">Transform your living space with our premium paints designed for Kenyan homes. Get expert advice, color consultations, and DIY resources.</p>
+                    <ul class="mb-8 space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>Virtual color consultation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>DIY guides and tutorials</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>Paint calculator for accurate estimates</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>Free sample pots</span>
+                        </li>
+                    </ul>
+                    <button class="btn-primary px-6 py-3 rounded-lg text-white font-medium w-full md:w-auto">
+                        Explore Home Solutions
+                    </button>
+                </div>
+                
+                <!-- Professional Card -->
+                <div class="user-segment-card bg-light p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-secondary text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-tools text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-heading font-bold">Professional Contractors</h3>
+                    </div>
+                    <p class="mb-6 text-gray-700">Tools and products to help your business thrive. Get bulk pricing, technical support, and exclusive contractor benefits.</p>
+                    <ul class="mb-8 space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>Contractor pricing and discounts</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>Bulk ordering and delivery</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>Technical specifications and SDS</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-3"></i>
+                            <span>Project management tools</span>
+                        </li>
+                    </ul>
+                    <button class="btn-secondary px-6 py-3 rounded-lg text-white font-medium w-full md:w-auto">
+                        Explore Professional Tools
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Categories -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Explore Our Paint Collection</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">High-performance paints designed for Kenya's unique climate and surfaces</p>
+            </div>
+            
+            <!-- Bento Grid -->
+            <div class="bento-grid">
+                <!-- Interior Paint -->
+                <div class="bento-item relative">
+                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Interior Paint" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent text-white p-6">
+                        <h3 class="text-2xl font-bold mb-2">Interior Paints</h3>
+                        <p class="mb-4">Beautiful finishes for every room in your home</p>
+                        <button class="bg-white text-primary px-5 py-2 rounded-lg font-medium hover:bg-opacity-90">Explore</button>
+                    </div>
+                </div>
+                
+                <!-- Exterior Paint -->
+                <div class="bento-item relative">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Exterior Paint" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent text-white p-6">
+                        <h3 class="text-xl font-bold">Exterior Paints</h3>
+                        <button class="mt-2 bg-white text-primary px-4 py-1 rounded-lg text-sm">Explore</button>
+                    </div>
+                </div>
+                
+                <!-- Wood & Metal -->
+                <div class="bento-item relative">
+                    <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wood & Metal Paint" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent text-white p-6">
+                        <h3 class="text-xl font-bold">Wood & Metal</h3>
+                        <button class="mt-2 bg-white text-primary px-4 py-1 rounded-lg text-sm">Explore</button>
+                    </div>
+                </div>
+                
+                <!-- Specialty Paints -->
+                <div class="bento-item relative">
+                    <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Specialty Paints" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent text-white p-6">
+                        <h3 class="text-xl font-bold">Specialty Paints</h3>
+                        <button class="mt-2 bg-white text-primary px-4 py-1 rounded-lg text-sm">Explore</button>
+                    </div>
+                </div>
+                
+                <!-- Primers -->
+                <div class="bento-item relative">
+                    <img src="https://images.unsplash.com/photo-1622737133809-d95047b9e673?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Primers" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent text-white p-6">
+                        <h3 class="text-xl font-bold">Primers</h3>
+                        <button class="mt-2 bg-white text-primary px-4 py-1 rounded-lg text-sm">Explore</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Trust & Security Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Shop with Confidence</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Your security and satisfaction are our top priorities</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Secure Payments -->
+                <div class="bg-white p-8 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="text-4xl text-primary mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Secure Payments</h3>
+                    <p class="text-gray-700 mb-4">We use bank-grade encryption to protect your payment information</p>
+                    <div class="flex justify-center space-x-4">
+                        <div class="bg-gray-200 p-2 rounded-lg">
+                            <i class="fab fa-cc-mastercard text-2xl"></i>
+                        </div>
+                        <div class="bg-gray-200 p-2 rounded-lg">
+                            <i class="fab fa-cc-visa text-2xl"></i>
+                        </div>
+                        <div class="bg-gray-200 p-2 rounded-lg">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNNDQyLjIgMTI4LjRjLTE1LjUtMjEuOS00My4xLTM1LjEtNzMuNC0zNS4xLTI0LjEgMC00Ni4yIDguNC02My4zIDIyLjMtMTcuMS0xMy45LTM5LjItMjIuMy02My4zLTIyLjMtMzAuMyAwLTU3LjkgMTMuMi03My40IDM1LjEtMTUuNSAyMS45LTE2LjQgNDkuOS00LjUgNzIuNyAxMS45IDIyLjggMzkuMiA1Ny4zIDc3LjkgMTEwLjZsNS45IDcuOGMyLjIgMi45IDUuNSA0LjYgOS4xIDQuNnM2LjktMS43IDkuMS00LjZsNS45LTcuOGMzOC43LTUzLjMgNjYtODcuOCA3Ny45LTExMC42IDExLjktMjIuOCAxMS00OS44LTQuNS03Mi43ek0yNTYgNDIxLjJjLTM0LjQtNTAuOS02MC4yLTg1LjQtNzAuNS0xMDMuMi05LjktMTctMTAuOS0zNS4xLTEuNC00OS43IDkuNS0xNC42IDI5LjUtMjMuOSA1MS45LTIzLjkgMTcuNCAwIDMzLjQgNS44IDQ1LjQgMTYuMyA5LjQgOC4yIDIwLjUgMTIuMyAzMi4xIDEyLjMgMTEuNiAwIDIyLjctNC4xIDMyLjEtMTIuMyAxMi0xMC41IDI4LTE2LjMgNDUuNC0xNi4zIDIyLjQgMCA0Mi40IDkuMyA1MS45IDIzLjkgOS41IDE0LjYgOC41IDMyLjctMS40IDQ5LjctMTAuMyAxNy44LTM2LjEgNTIuMy03MC41IDEwMy4yeiIgZmlsbD0iIzI3YTk2MCIvPjwvc3ZnPg==" alt="M-Pesa" class="h-8">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Click & Collect -->
+                <div class="bg-white p-8 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="text-4xl text-accent mb-4">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Click & Collect</h3>
+                    <p class="text-gray-700 mb-4">Order online and pick up at your nearest branch within 2 hours</p>
+                    <div class="flex justify-center mt-6">
+                        <div class="flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+                            <i class="fas fa-map-marker-alt text-primary mr-2"></i>
+                            <span>4 Branches Across Kenya</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Satisfaction Guarantee -->
+                <div class="bg-white p-8 rounded-xl text-center shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="text-4xl text-secondary mb-4">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">9-Year Warranty</h3>
+                    <p class="text-gray-700 mb-4">Our premium paints come with a 9-year labor and material warranty</p>
+                    <div class="mt-6">
+                        <div class="inline-flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+                            <i class="fas fa-star text-yellow-400 mr-2"></i>
+                            <span>4.8/5 from 1,200+ reviews</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Consultation CTA -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="form-card p-6 md:p-10">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-heading font-bold text-primary mb-3">Need Expert Color Advice?</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Book a free virtual consultation with our paint experts and get personalized recommendations for your project</p>
+                    </div>
+                    
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Full Name</label>
+                                <input type="text" class="secure-field w-full px-4 py-3 rounded-lg focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                                <input type="tel" class="secure-field w-full px-4 py-3 rounded-lg focus:outline-none">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                            <input type="email" class="secure-field w-full px-4 py-3 rounded-lg focus:outline-none">
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Project Type</label>
+                                <select class="secure-field w-full px-4 py-3 rounded-lg focus:outline-none">
+                                    <option>Home Interior</option>
+                                    <option>Home Exterior</option>
+                                    <option>Commercial Space</option>
+                                    <option>Furniture/Woodwork</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Preferred Consultation Time</label>
+                                <select class="secure-field w-full px-4 py-3 rounded-lg focus:outline-none">
+                                    <option>Morning (9am - 12pm)</option>
+                                    <option>Afternoon (1pm - 4pm)</option>
+                                    <option>Evening (5pm - 7pm)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Project Details</label>
+                            <textarea class="secure-field w-full px-4 py-3 rounded-lg h-32 focus:outline-none" placeholder="Tell us about your project (room sizes, surfaces, etc.)"></textarea>
+                        </div>
+                        
+                        <div class="pt-4">
+                            <button type="submit" class="btn-primary w-full py-4 rounded-lg text-white font-bold text-lg hover:opacity-95 transition-opacity">
+                                Book Free Consultation
+                            </button>
+                        </div>
+                        
+                        <div class="text-center text-gray-500 text-sm mt-4">
+                            <p>We'll contact you within 24 hours to confirm your appointment</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-neutral text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center mb-6">
+                        <div class="bg-primary text-white p-2 rounded-lg mr-3">
+                            <i class="fas fa-paint-roller"></i>
+                        </div>
+                        <span class="text-2xl font-heading font-bold">Royal<span class="text-secondary">Paints</span></span>
+                    </div>
+                    <p class="mb-6 text-gray-300">Premium quality paints for Kenyan homes and businesses. Transforming spaces since 2010.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Products</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Color Visualizer</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Inspiration Gallery</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">For Professionals</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Branches</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
+                            <span>TRM Plaza, Thika Road, Thika</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone text-primary mr-3"></i>
+                            <span>0725 326 795</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-primary mr-3"></i>
+                            <span>info@royalpaints.co.ke</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clock text-primary mr-3"></i>
+                            <span>Mon-Fri: 8:30am - 5:30pm<br>Sat: 9am - 2pm</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Stay Updated</h3>
+                    <p class="text-gray-300 mb-4">Subscribe for exclusive offers, color trends, and DIY tips</p>
+                    <form class="space-y-3">
+                        <input type="email" placeholder="Your email address" class="w-full px-4 py-3 rounded-lg text-gray-800">
+                        <button class="btn-secondary w-full py-3 rounded-lg text-white font-medium">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 mb-4 md:mb-0">© <span id="currentYear"></span> Royal Paints Kenya. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuBackdrop = document.getElementById('menuBackdrop');
+        
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            menuBackdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            menuBackdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+        closeMenu.addEventListener('click', closeMobileMenu);
+        menuBackdrop.addEventListener('click', closeMobileMenu);
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+        
+        // Update footer year automatically
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Add animations on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements to animate
+        document.querySelectorAll('.hero-content h1, .hero-content p, .hero-content .flex').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
