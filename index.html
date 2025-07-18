@@ -565,91 +565,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-neutral text-white pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                <!-- Company Info -->
-                <div>
-                    <div class="flex items-center mb-6">
-                        <div class="bg-primary text-white p-2 rounded-lg mr-3">
-                            <i class="fas fa-paint-roller"></i>
-                        </div>
-                        <span class="text-2xl font-heading font-bold">Royal<span class="text-secondary">Paints</span></span>
-                    </div>
-                    <p class="mb-6 text-gray-300">Premium quality paints for Kenyan homes and businesses. Transforming spaces since 2010.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white text-xl transition-colors">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="text-lg font-bold mb-6">Quick Links</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Products</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Color Visualizer</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Inspiration Gallery</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">For Professionals</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Branches</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">About Us</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Contact -->
-                <div>
-                    <h3 class="text-lg font-bold mb-6">Contact Us</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
-                            <span>TRM Plaza, Thika Road, Thika</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone text-primary mr-3"></i>
-                            <span>0725 326 795</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope text-primary mr-3"></i>
-                            <span>info@royalcolors.co.ke</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-clock text-primary mr-3"></i>
-                            <span>Mon-Fri: 8:30am - 5:30pm<br>Sat: 9am - 2pm</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Newsletter -->
-                <div>
-                    <h3 class="text-lg font-bold mb-6">Stay Updated</h3>
-                    <p class="text-gray-300 mb-4">Subscribe for exclusive offers, color trends, and DIY tips</p>
-                    <form class="space-y-3">
-                        <input type="email" placeholder="Your email address" class="w-full px-4 py-3 rounded-lg text-gray-800">
-                        <button class="btn-secondary w-full py-3 rounded-lg text-white font-medium">
-                            Subscribe
-                        </button>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-700 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400 mb-4 md:mb-0">© <span id="currentYear"></span> Royal Paints Kenya</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+   <div id="footer-container"></div>
 
     <script>
         // Mobile menu toggle
@@ -701,5 +617,15 @@
             observer.observe(el);
         });
     </script>
+    <script>
+    fetch('footer.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer-container').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error loading footer:', error);
+        });
+</script>
 </body>
 </html>
