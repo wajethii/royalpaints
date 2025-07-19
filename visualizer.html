@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Paints - Enhanced Room Visualizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1e3a8a;
+            --accent: #f59e0b;
+            --secondary: #E67E22;
+            --neutral: #34495E;
+            --highlight: #FFD700;
+            --window-blue: #a0d2ff;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            background: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .logo-text {
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .main-content {
+                grid-template-columns: 350px 1fr;
+                gap: 30px;
+                padding: 30px 0;
+            }
+        }
+
+        .visualizer-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (min-width: 768px) {
+            .visualizer-card {
+                border-radius: 16px;
+                padding: 25px;
+            }
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .card-title {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        .room-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .room-selector {
+                gap: 15px;
+                margin-bottom: 25px;
+            }
+        }
+
+        .room-option {
+            background: rgba(30, 41, 59, 0.7);
+            border: 2px solid rgba(100, 116, 139, 0.3);
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .room-option {
+                padding: 15px;
+                font-size: 1rem;
+            }
+        }
+
+        .room-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .room-option.active {
+            border-color: var(--primary);
+            background: rgba(30, 58, 138, 0.3);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.3);
+        }
+
+        .room-option i {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        @media (min-width: 768px) {
+            .room-option i {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+            }
+        }
+
+        .controls-group {
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .controls-group {
+                margin-bottom: 25px;
+            }
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        @media (min-width: 768px) {
+            .control-label {
+                margin-bottom: 10px;
+                font-size: 1rem;
+            }
+        }
+
+        .color-picker {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        @media (min-width: 768px) {
+            .color-picker {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 10px;
+            }
+        }
+
+        .color-option {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active::after {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .surface-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .surface-controls {
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+        }
+
+        .surface-btn {
+            padding: 8px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 6px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+            min-width: 70px;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .surface-btn {
+                padding: 10px;
+                min-width: 80px;
+                font-size: 0.95rem;
+            }
+        }
+
+        .surface-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .paint-type-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .paint-type-selector {
+                gap: 10px;
+                margin-top: 15px;
+            }
+        }
+
+        .paint-type-btn {
+            flex: 1;
+            padding: 8px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 6px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .paint-type-btn {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .paint-type-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .material-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .material-selector {
+                gap: 10px;
+                margin-top: 15px;
+            }
+        }
+
+        .material-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 8px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 6px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .material-btn {
+                padding: 10px;
+                min-width: 80px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .material-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .floor-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .floor-selector {
+                gap: 10px;
+                margin-top: 15px;
+            }
+        }
+
+        .floor-option {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 6px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .floor-option {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .floor-option.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .pattern-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .pattern-selector {
+                gap: 10px;
+                margin-top: 15px;
+            }
+        }
+
+        .pattern-option {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .pattern-option:hover {
+            transform: scale(1.05);
+        }
+
+        .pattern-option.active::after {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .action-buttons {
+                gap: 15px;
+                margin-top: 25px;
+                flex-wrap: nowrap;
+            }
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 120px;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .btn {
+                padding: 14px;
+                border-radius: 10px;
+                font-size: 1rem;
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary) 0%, #0ea5e9 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(30, 41, 59, 0.7);
+            color: #cbd5e1;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .visualizer-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .visualizer-wrapper {
+                height: 500px;
+                border-radius: 16px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .visualizer-wrapper {
+                height: 600px;
+            }
+        }
+
+        #visualizer-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .view-controls {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .view-controls {
+                bottom: 20px;
+                right: 20px;
+                gap: 10px;
+            }
+        }
+
+        .view-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .view-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        .view-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .instructions {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        @media (min-width: 768px) {
+            .instructions {
+                padding: 15px;
+                margin-top: 25px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .instructions i {
+            color: var(--accent);
+            margin-right: 6px;
+        }
+
+        .furniture-info {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            border-left: 3px solid var(--secondary);
+        }
+
+        @media (min-width: 768px) {
+            .furniture-info {
+                padding: 15px;
+                margin-top: 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .lighting-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .lighting-control {
+                gap: 10px;
+                margin-top: 10px;
+            }
+        }
+
+        .light-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(100, 116, 139, 0.3);
+            outline: none;
+        }
+
+        .light-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .light-value {
+            width: 35px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .window-controls {
+                gap: 10px;
+                margin-top: 10px;
+            }
+        }
+
+        .window-btn {
+            flex: 1;
+            padding: 8px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 6px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .window-btn {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .window-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .controls-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 767px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .controls-panel {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 85%;
+                height: 100%;
+                z-index: 1000;
+                overflow-y: auto;
+                padding-top: 60px;
+                padding-bottom: 20px;
+            }
+
+            .controls-panel.active {
+                transform: translateX(0);
+            }
+
+            .close-panel {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo ">
+                    <div class="logo-icon">
+                        <i class="fas fa-paint-roller"></i>
+                    </div>
+                    <div class="logo-text no-underline">Royal Paints</div>
+                </a>
+                <nav>
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart"></i> Shop
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-toggle">
+        <i class="fas fa-sliders-h"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Controls Panel -->
+            <div class="visualizer-card controls-panel" id="controls-panel">
+                <button class="close-panel" id="close-panel">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <h2 class="card-title"><i class="fas fa-sliders-h"></i> Design Controls</h2>
+
+                <div class="controls-group">
+                    <h3 class="card-title"><i class="fas fa-door-open"></i> Room Type</h3>
+                    <div class="room-selector">
+                        <div class="room-option active" data-room="living">
+                            <i class="fas fa-couch"></i>
+                            <div>Living Room</div>
+                        </div>
+                        <div class="room-option" data-room="bedroom">
+                            <i class="fas fa-bed"></i>
+                            <div>Bedroom</div>
+                        </div>
+                        <div class="room-option" data-room="kitchen">
+                            <i class="fas fa-utensils"></i>
+                            <div>Kitchen</div>
+                        </div>
+                        <div class="room-option" data-room="bathroom">
+                            <i class="fas fa-bath"></i>
+                            <div>Bathroom</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls-group">
+                    <h3 class="card-title"><i class="fas fa-brush"></i> Painting Options</h3>
+                    <div class="surface-controls">
+                        <div class="surface-btn active" data-surface="left-wall">Left Wall</div>
+                        <div class="surface-btn" data-surface="right-wall">Right Wall</div>
+                        <div class="surface-btn" data-surface="back-wall">Back Wall</div>
+                        <div class="surface-btn" data-surface="ceiling">Ceiling</div>
+                        <div class="surface-btn" data-surface="trim">Trim</div>
+                    </div>
+
+                    <div class="paint-type-selector">
+                        <div class="paint-type-btn active" data-paint-type="indoor">Indoor Paint</div>
+                        <div class="paint-type-btn" data-paint-type="outdoor">Outdoor Paint</div>
+                    </div>
+
+                    <div class="material-selector" id="material-selector">
+                        <div class="material-btn" data-material="wood">Wood</div>
+                        <div class="material-btn" data-material="stone">Stone</div>
+                        <div class="material-btn" data-material="steel">Steel</div>
+                    </div>
+                </div>
+
+                <div class="controls-group">
+                    <h3 class="card-title"><i class="fas fa-palette"></i> Color Selection</h3>
+                    <div class="control-label">
+                        <span>Selected color:</span>
+                        <span id="current-color">#F8F0E3</span>
+                    </div>
+                    <div class="color-picker">
+                        <!-- Neutral Tones -->
+                        <div class="color-option active" style="background-color: #f8f0e3;" data-color="#f8f0e3"></div>
+                        <div class="color-option" style="background-color: #e6d5c3;" data-color="#e6d5c3"></div>
+                        <div class="color-option" style="background-color: #d4c0a1;" data-color="#d4c0a1"></div>
+                        <div class="color-option" style="background-color: #c3ab80;" data-color="#c3ab80"></div>
+                        <div class="color-option" style="background-color: #e3e8f0;" data-color="#e3e8f0"></div>
+
+                        <!-- Blues -->
+                        <div class="color-option" style="background-color: #c5d0e3;" data-color="#c5d0e3"></div>
+                        <div class="color-option" style="background-color: #a7b8d6;" data-color="#a7b8d6"></div>
+                        <div class="color-option" style="background-color: #8aa0c9;" data-color="#8aa0c9"></div>
+                        <div class="color-option" style="background-color: #6d87bc;" data-color="#6d87bc"></div>
+                        <div class="color-option" style="background-color: #4f6eaf;" data-color="#4f6eaf"></div>
+
+                        <!-- Greens -->
+                        <div class="color-option" style="background-color: #e3f0e3;" data-color="#e3f0e3"></div>
+                        <div class="color-option" style="background-color: #c5e3c5;" data-color="#c5e3c5"></div>
+                        <div class="color-option" style="background-color: #a7d6a7;" data-color="#a7d6a7"></div>
+                        <div class="color-option" style="background-color: #8ac98a;" data-color="#8ac98a"></div>
+                        <div class="color-option" style="background-color: #6cbc6c;" data-color="#6cbc6c"></div>
+
+                        <!-- Reds/Pinks -->
+                        <div class="color-option" style="background-color: #f0e3e8;" data-color="#f0e3e8"></div>
+                        <div class="color-option" style="background-color: #e3c5d0;" data-color="#e3c5d0"></div>
+                        <div class="color-option" style="background-color: #d6a7b8;" data-color="#d6a7b8"></div>
+                        <div class="color-option" style="background-color: #c98aa0;" data-color="#c98aa0"></div>
+                        <div class="color-option" style="background-color: #bc6c88;" data-color="#bc6c88"></div>
+
+                        <!-- Yellows/Oranges -->
+                        <div class="color-option" style="background-color: #f9f2e3;" data-color="#f9f2e3"></div>
+                        <div class="color-option" style="background-color: #f3e5c7;" data-color="#f3e5c7"></div>
+                        <div class="color-option" style="background-color: #edd8ab;" data-color="#edd8ab"></div>
+                        <div class="color-option" style="background-color: #e7cb8f;" data-color="#e7cb8f"></div>
+                        <div class="color-option" style="background-color: #e1be73;" data-color="#e1be73"></div>
+                    </div>
+                </div>
+
+                <div class="controls-group">
+                    <h3 class="card-title"><i class="fas fa-layer-group"></i> Floor Options</h3>
+                    <div class="floor-selector">
+                        <div class="floor-option active" data-floor-type="wood">Wood</div>
+                        <div class="floor-option" data-floor-type="tile">Tile</div>
+                        <div class="floor-option" data-floor-type="carpet">Carpet</div>
+                    </div>
+
+                    <div class="pattern-selector">
+                        <div class="pattern-option active"
+                            style="background: linear-gradient(45deg, #8B4513 25%, #6B3E0E 25%, #6B3E0E 50%, #8B4513 50%, #8B4513 75%, #6B3E0E 75%, #6B3E0E 100%);"
+                            data-pattern="wood-1"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #A0522D 25%, #8B4513 25%, #8B4513 50%, #A0522D 50%, #A0522D 75%, #8B4513 75%, #8B4513 100%);"
+                            data-pattern="wood-2"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #D2B48C 25%, #C19A6B 25%, #C19A6B 50%, #D2B48C 50%, #D2B48C 75%, #C19A6B 75%, #C19A6B 100%);"
+                            data-pattern="wood-3"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #e0e0e0 25%, #c0c0c0 25%, #c0c0c0 50%, #e0e0e0 50%, #e0e0e0 75%, #c0c0c0 75%, #c0c0c0 100%); background-size: 20px 20px;"
+                            data-pattern="tile-1"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #f0f0f0 25%, #d0d0d0 25%, #d0d0d0 50%, #f0f0f0 50%, #f0f0f0 75%, #d0d0d0 75%, #d0d0d0 100%); background-size: 20px 20px;"
+                            data-pattern="tile-2"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #f5f5f5 25%, #e5e5e5 25%, #e5e5e5 50%, #f5f5f5 50%, #f5f5f5 75%, #e5e5e5 75%, #e5e5e5 100%); background-size: 20px 20px;"
+                            data-pattern="tile-3"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #556B2F 25%, #3D4A23 25%, #3D4A23 50%, #556B2F 50%, #556B2F 75%, #3D4A23 75%, #3D4A23 100%);"
+                            data-pattern="carpet-1"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #6B8E23 25%, #556B2F 25%, #556B2F 50%, #6B8E23 50%, #6B8E23 75%, #556B2F 75%, #556B2F 100%);"
+                            data-pattern="carpet-2"></div>
+                        <div class="pattern-option"
+                            style="background: linear-gradient(45deg, #8FBC8F 25%, #7CAF7C 25%, #7CAF7C 50%, #8FBC8F 50%, #8FBC8F 75%, #7CAF7C 75%, #7CAF7C 100%);"
+                            data-pattern="carpet-3"></div>
+                    </div>
+                </div>
+
+                <div class="controls-group">
+                    <h3 class="card-title"><i class="fas fa-lightbulb"></i> Lighting</h3>
+                    <div class="lighting-control">
+                        <i class="fas fa-sun" style="color: var(--accent);"></i>
+                        <input type="range" min="0" max="100" value="80" class="light-slider" id="light-intensity">
+                        <span class="light-value">80%</span>
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-btn active" data-window="day">Daytime</div>
+                        <div class="window-btn" data-window="night">Nighttime</div>
+                    </div>
+                </div>
+
+                <div class="furniture-info">
+                    <i class="fas fa-info-circle"></i> Current room includes:
+                    <div id="furniture-list">65" TV, sofa set, coffee table, entertainment unit, rug</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-shopping-cart"></i> Buy
+                    </button>
+                </div>
+
+                <div class="instructions">
+                    <i class="fas fa-mouse-pointer"></i> Drag to rotate view. Scroll to zoom. Select surfaces and colors
+                    to visualize your paint.
+                </div>
+            </div>
+
+            <!-- 3D Visualizer -->
+            <div class="visualizer-card">
+                <h2 class="card-title"><i class="fas fa-cube"></i> 3D Room Visualizer</h2>
+                <div class="visualizer-wrapper">
+                    <div id="visualizer-container"></div>
+                    <div class="view-controls">
+                        <div class="view-btn" id="reset-view">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="view-btn" id="front-view">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="view-btn" id="top-view">
+                            <i class="fas fa-vector-square"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-container"></div>
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading footer:', error);
+            });
+    </script>
+    <script>
+        // Initialize Three.js scene
+        let scene, camera, renderer, controls;
+        let room, leftWall, rightWall, backWall, ceiling, floor, trim;
+        let currentColor = "#f8f0e3";
+        let currentSurface = "left-wall";
+        let currentRoom = "living";
+        let currentPaintType = "indoor";
+        let currentFloorType = "wood";
+        let currentMaterial = "wood";
+        let currentPattern = "wood-1";
+        let lightIntensity = 0.8;
+        let isDaytime = true;
+        let sunLight;
+
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f172a);
+            scene.fog = new THREE.Fog(0x0f172a, 10, 20);
+
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 2, 5);
+
+            // Create renderer
+            const container = document.getElementById('visualizer-container');
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // Add orbit controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 3;
+            controls.maxDistance = 10;
+            controls.maxPolarAngle = Math.PI / 2 - 0.1;
+
+            // Add lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 7);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 1024;
+            directionalLight.shadow.mapSize.height = 1024;
+            scene.add(directionalLight);
+
+            // Sunlight from window
+            sunLight = new THREE.DirectionalLight(0xffeedd, 0.8);
+            sunLight.position.set(0, 3, -10);
+            sunLight.castShadow = true;
+            scene.add(sunLight);
+
+            const backLight = new THREE.DirectionalLight(0xffffff, 0.4);
+            backLight.position.set(-5, 5, -5);
+            scene.add(backLight);
+
+            // Create room
+            createRoom();
+            setupLivingRoom();
+
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize);
+
+            // Start animation loop
+            animate();
+        }
+
+        function createRoom() {
+            // Remove existing room if present
+            if (room) scene.remove(room);
+
+            room = new THREE.Group();
+
+            // Create wall material
+            const wallMaterial = new THREE.MeshStandardMaterial({
+                color: currentColor,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+
+            // Left wall
+            leftWall = new THREE.Mesh(
+                new THREE.BoxGeometry(0.2, 4, 8),
+                wallMaterial.clone()
+            );
+            leftWall.position.x = -4;
+            leftWall.position.z = 0;
+            room.add(leftWall);
+
+            // Right wall
+            rightWall = new THREE.Mesh(
+                new THREE.BoxGeometry(0.2, 4, 8),
+                wallMaterial.clone()
+            );
+            rightWall.position.x = 4;
+            rightWall.position.z = 0;
+            room.add(rightWall);
+
+            // Back wall with window
+            createBackWallWithWindow();
+
+            // Create ceiling
+            const ceilingMaterial = new THREE.MeshStandardMaterial({
+                color: "#ffffff",
+                roughness: 0.9,
+                metalness: 0.1
+            });
+
+            ceiling = new THREE.Mesh(
+                new THREE.BoxGeometry(8, 0.1, 8),
+                ceilingMaterial
+            );
+            ceiling.position.y = 2;
+            room.add(ceiling);
+
+            // Create floor
+            updateFloorMaterial();
+
+            // Create trim
+            const trimMaterial = new THREE.MeshStandardMaterial({
+                color: "#d4c0a1",
+                roughness: 0.7,
+                metalness: 0.3
+            });
+
+            trim = new THREE.Mesh(
+                new THREE.BoxGeometry(8, 0.2, 0.2),
+                trimMaterial
+            );
+            trim.position.y = -1.8;
+            trim.position.z = -4;
+            room.add(trim);
+
+            scene.add(room);
+        }
+
+        function createBackWallWithWindow() {
+            const wallMaterial = new THREE.MeshStandardMaterial({
+                color: currentColor,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+
+            // Back wall with window opening
+            const wallWidth = 8;
+            const wallHeight = 4;
+            const windowWidth = 3;
+            const windowHeight = 1.8;
+            const windowBottom = 0.5;
+
+            // Bottom part of wall
+            const bottomHeight = windowBottom;
+            const bottomWall = new THREE.Mesh(
+                new THREE.BoxGeometry(wallWidth, bottomHeight, 0.2),
+                wallMaterial.clone()
+            );
+            bottomWall.position.z = -4;
+            bottomWall.position.y = -wallHeight / 2 + bottomHeight / 2;
+
+            // Top part of wall
+            const topHeight = wallHeight - windowBottom - windowHeight;
+            const topWall = new THREE.Mesh(
+                new THREE.BoxGeometry(wallWidth, topHeight, 0.2),
+                wallMaterial.clone()
+            );
+            topWall.position.z = -4;
+            topWall.position.y = windowBottom + windowHeight + topHeight / 2 - wallHeight / 2;
+
+            // Left side of window
+            const leftWidth = (wallWidth - windowWidth) / 2;
+            const leftSide = new THREE.Mesh(
+                new THREE.BoxGeometry(leftWidth, windowHeight, 0.2),
+                wallMaterial.clone()
+            );
+            leftSide.position.z = -4;
+            leftSide.position.x = -windowWidth / 2 - leftWidth / 2;
+            leftSide.position.y = windowBottom + windowHeight / 2 - wallHeight / 2;
+
+            // Right side of window
+            const rightSide = new THREE.Mesh(
+                new THREE.BoxGeometry(leftWidth, windowHeight, 0.2),
+                wallMaterial.clone()
+            );
+            rightSide.position.z = -4;
+            rightSide.position.x = windowWidth / 2 + leftWidth / 2;
+            rightSide.position.y = windowBottom + windowHeight / 2 - wallHeight / 2;
+
+            // Window frame
+            const frameMaterial = new THREE.MeshStandardMaterial({
+                color: "#d4c0a1",
+                roughness: 0.7,
+                metalness: 0.3
+            });
+
+            // Horizontal top frame
+            const topFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(windowWidth + 0.2, 0.1, 0.1),
+                frameMaterial
+            );
+            topFrame.position.z = -3.95;
+            topFrame.position.y = windowBottom + windowHeight - wallHeight / 2;
+
+            // Horizontal bottom frame
+            const bottomFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(windowWidth + 0.2, 0.1, 0.1),
+                frameMaterial
+            );
+            bottomFrame.position.z = -3.95;
+            bottomFrame.position.y = windowBottom - wallHeight / 2;
+
+            // Vertical left frame
+            const leftFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(0.1, windowHeight, 0.1),
+                frameMaterial
+            );
+            leftFrame.position.z = -3.95;
+            leftFrame.position.x = -windowWidth / 2;
+            leftFrame.position.y = windowBottom + windowHeight / 2 - wallHeight / 2;
+
+            // Vertical right frame
+            const rightFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(0.1, windowHeight, 0.1),
+                frameMaterial
+            );
+            rightFrame.position.z = -3.95;
+            rightFrame.position.x = windowWidth / 2;
+            rightFrame.position.y = windowBottom + windowHeight / 2 - wallHeight / 2;
+
+            // Glass
+            const glassMaterial = new THREE.MeshStandardMaterial({
+                color: isDaytime ? 0xa0d2ff : 0x111133,
+                transparent: true,
+                opacity: isDaytime ? 0.7 : 0.3,
+                metalness: 0.5,
+                roughness: 0.1,
+                emissive: isDaytime ? 0x000000 : 0x202050,
+                emissiveIntensity: isDaytime ? 0 : 0.3
+            });
+
+            const glass = new THREE.Mesh(
+                new THREE.BoxGeometry(windowWidth - 0.1, windowHeight - 0.1, 0.01),
+                glassMaterial
+            );
+            glass.position.z = -3.92;
+            glass.position.y = windowBottom + windowHeight / 2 - wallHeight / 2;
+
+            backWall = new THREE.Group();
+            backWall.add(bottomWall, topWall, leftSide, rightSide,
+                topFrame, bottomFrame, leftFrame, rightFrame, glass);
+            room.add(backWall);
+        }
+
+        function updateFloorMaterial() {
+            if (floor) room.remove(floor);
+
+            let floorMaterial;
+            switch (currentPattern) {
+                case "wood-1":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#8B4513",
+                        roughness: 0.7,
+                        metalness: 0.1
+                    });
+                    break;
+                case "wood-2":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#A0522D",
+                        roughness: 0.7,
+                        metalness: 0.1
+                    });
+                    break;
+                case "wood-3":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#D2B48C",
+                        roughness: 0.7,
+                        metalness: 0.1
+                    });
+                    break;
+                case "tile-1":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#e0e0e0",
+                        roughness: 0.6,
+                        metalness: 0.2
+                    });
+                    break;
+                case "tile-2":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#f0f0f0",
+                        roughness: 0.6,
+                        metalness: 0.2
+                    });
+                    break;
+                case "tile-3":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#f5f5f5",
+                        roughness: 0.6,
+                        metalness: 0.2
+                    });
+                    break;
+                case "carpet-1":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#556B2F",
+                        roughness: 0.95,
+                        metalness: 0
+                    });
+                    break;
+                case "carpet-2":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#6B8E23",
+                        roughness: 0.95,
+                        metalness: 0
+                    });
+                    break;
+                case "carpet-3":
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#8FBC8F",
+                        roughness: 0.95,
+                        metalness: 0
+                    });
+                    break;
+                default:
+                    floorMaterial = new THREE.MeshStandardMaterial({
+                        color: "#3c2f2f",
+                        roughness: 0.8,
+                        metalness: 0.2
+                    });
+            }
+
+            floor = new THREE.Mesh(
+                new THREE.BoxGeometry(8, 0.1, 8),
+                floorMaterial
+            );
+            floor.position.y = -2;
+            room.add(floor);
+        }
+
+        function setupLivingRoom() {
+            // Clear previous furniture
+            while (room.children.length > 6) {
+                room.remove(room.children[6]);
+            }
+
+            // Add a large sofa
+            const sofaGeometry = new THREE.BoxGeometry(2.5, 0.8, 1);
+            const sofaMaterial = new THREE.MeshStandardMaterial({
+                color: "#8B4513",
+                roughness: 0.9
+            });
+            const sofa = new THREE.Mesh(sofaGeometry, sofaMaterial);
+            sofa.position.set(0, -1.6, -2.5);
+            sofa.rotation.y = Math.PI;
+            room.add(sofa);
+
+            // Add a coffee table
+            const tableGeometry = new THREE.BoxGeometry(1.2, 0.4, 1.2);
+            const tableMaterial = new THREE.MeshStandardMaterial({
+                color: "#654321",
+                roughness: 0.8
+            });
+            const table = new THREE.Mesh(tableGeometry, tableMaterial);
+            table.position.set(0, -1.8, -1);
+            room.add(table);
+
+            // Add a rug
+            const rugGeometry = new THREE.BoxGeometry(3, 0.05, 2);
+            const rugMaterial = new THREE.MeshStandardMaterial({
+                color: "#556B2F",
+                roughness: 0.95
+            });
+            const rug = new THREE.Mesh(rugGeometry, rugMaterial);
+            rug.position.set(0, -1.95, -1.5);
+            room.add(rug);
+
+            // Add a TV unit
+            const tvUnitGeometry = new THREE.BoxGeometry(2, 1.5, 0.4);
+            const tvUnitMaterial = new THREE.MeshStandardMaterial({
+                color: "#333",
+                roughness: 0.8
+            });
+            const tvUnit = new THREE.Mesh(tvUnitGeometry, tvUnitMaterial);
+            tvUnit.position.set(0, -1.25, -3.8);
+            room.add(tvUnit);
+
+            // Add a 65" TV
+            const tvGeometry = new THREE.BoxGeometry(1.6, 0.9, 0.1);
+            const tvMaterial = new THREE.MeshStandardMaterial({
+                color: "#111",
+                roughness: 0.2
+            });
+            const tv = new THREE.Mesh(tvGeometry, tvMaterial);
+            tv.position.set(0, -0.7, -3.9);
+            room.add(tv);
+
+            // TV screen - create a realistic screen with emissive material
+            const screenGeometry = new THREE.BoxGeometry(1.5, 0.8, 0.02);
+            const screenMaterial = new THREE.MeshStandardMaterial({
+                color: "#000",
+                emissive: "#102040",
+                emissiveIntensity: 0.5
+            });
+            const screen = new THREE.Mesh(screenGeometry, screenMaterial);
+            screen.position.set(0, -0.7, -3.92);
+
+            // Add screen content
+            const screenContentGeometry = new THREE.PlaneGeometry(1.48, 0.78);
+            const screenContentMaterial = new THREE.MeshBasicMaterial({
+                color: 0x102040,
+                side: THREE.DoubleSide
+            });
+            const screenContent = new THREE.Mesh(screenContentGeometry, screenContentMaterial);
+            screenContent.position.z = 0.01;
+            screen.add(screenContent);
+
+            // Create screen effect
+            createScreenEffect(screenContent);
+            room.add(screen);
+
+            // Add a lamp
+            const lampBaseGeometry = new THREE.CylinderGeometry(0.1, 0.15, 0.2, 16);
+            const lampBaseMaterial = new THREE.MeshStandardMaterial({
+                color: "#d4c0a1",
+                metalness: 0.5
+            });
+            const lampBase = new THREE.Mesh(lampBaseGeometry, lampBaseMaterial);
+            lampBase.position.set(2, -1.8, 0);
+
+            const lampPoleGeometry = new THREE.CylinderGeometry(0.03, 0.03, 1, 16);
+            const lampPoleMaterial = new THREE.MeshStandardMaterial({
+                color: "#d4c0a1",
+                metalness: 0.5
+            });
+            const lampPole = new THREE.Mesh(lampPoleGeometry, lampPoleMaterial);
+            lampPole.position.y = 0.5;
+
+            const lampShadeGeometry = new THREE.ConeGeometry(0.4, 0.3, 16);
+            const lampShadeMaterial = new THREE.MeshStandardMaterial({
+                color: "#f0f0f0",
+                emissive: "#f9e076",
+                emissiveIntensity: lightIntensity,
+                transparent: true,
+                opacity: 0.8
+            });
+            const lampShade = new THREE.Mesh(lampShadeGeometry, lampShadeMaterial);
+            lampShade.position.y = 1.1;
+            lampShade.rotation.x = Math.PI;
+
+            const lamp = new THREE.Group();
+            lamp.add(lampBase, lampPole, lampShade);
+            room.add(lamp);
+
+            // Update furniture list
+            document.getElementById('furniture-list').textContent =
+                "65\" TV, 3-seater sofa, coffee table, entertainment unit, rug, floor lamp";
+        }
+
+        function setupKitchen() {
+            // Clear previous furniture
+            while (room.children.length > 6) {
+                room.remove(room.children[6]);
+            }
+
+            // Add kitchen cabinets
+            const lowerCabinetGeometry = new THREE.BoxGeometry(3, 1, 0.6);
+            const lowerCabinetMaterial = new THREE.MeshStandardMaterial({
+                color: "#654321",
+                roughness: 0.7
+            });
+            const lowerCabinet = new THREE.Mesh(lowerCabinetGeometry, lowerCabinetMaterial);
+            lowerCabinet.position.set(0, -1.7, -3.7);
+            room.add(lowerCabinet);
+
+            const upperCabinetGeometry = new THREE.BoxGeometry(3, 1.5, 0.4);
+            const upperCabinetMaterial = new THREE.MeshStandardMaterial({
+                color: "#654321",
+                roughness: 0.7
+            });
+            const upperCabinet = new THREE.Mesh(upperCabinetGeometry, upperCabinetMaterial);
+            upperCabinet.position.set(0, -0.25, -3.8);
+            room.add(upperCabinet);
+
+            // Add a fridge
+            const fridgeGeometry = new THREE.BoxGeometry(0.7, 2.2, 0.6);
+            const fridgeMaterial = new THREE.MeshStandardMaterial({
+                color: "#ddd",
+                roughness: 0.5
+            });
+            const fridge = new THREE.Mesh(fridgeGeometry, fridgeMaterial);
+            fridge.position.set(-2.5, -0.9, -3.7);
+            room.add(fridge);
+
+            // Add a cooker
+            const cookerGeometry = new THREE.BoxGeometry(0.8, 0.9, 0.6);
+            const cookerMaterial = new THREE.MeshStandardMaterial({
+                color: "#444",
+                roughness: 0.3,
+                metalness: 0.8
+            });
+            const cooker = new THREE.Mesh(cookerGeometry, cookerMaterial);
+            cooker.position.set(1.5, -1.55, -3.7);
+            room.add(cooker);
+
+            // Add a microwave
+            const microwaveGeometry = new THREE.BoxGeometry(0.5, 0.3, 0.4);
+            const microwaveMaterial = new THREE.MeshStandardMaterial({
+                color: "#888",
+                roughness: 0.4
+            });
+            const microwave = new THREE.Mesh(microwaveGeometry, microwaveMaterial);
+            microwave.position.set(0, -0.5, -3.8);
+            room.add(microwave);
+
+            // Update furniture list
+            document.getElementById('furniture-list').textContent =
+                "Kitchen cabinets, refrigerator, cooker, microwave, sink";
+        }
+
+        function setupBathroom() {
+            // Clear previous furniture
+            while (room.children.length > 6) {
+                room.remove(room.children[6]);
+            }
+
+            // Add a bathtub
+            const bathtubGeometry = new THREE.BoxGeometry(1.8, 0.6, 0.8);
+            const bathtubMaterial = new THREE.MeshStandardMaterial({
+                color: "#ddd",
+                roughness: 0.6
+            });
+            const bathtub = new THREE.Mesh(bathtubGeometry, bathtubMaterial);
+            bathtub.position.set(0, -1.7, -2);
+            room.add(bathtub);
+
+            // Add a sink
+            const sinkGeometry = new THREE.BoxGeometry(0.8, 0.4, 0.5);
+            const sinkMaterial = new THREE.MeshStandardMaterial({
+                color: "#eee",
+                roughness: 0.5
+            });
+            const sink = new THREE.Mesh(sinkGeometry, sinkMaterial);
+            sink.position.set(2.5, -1.6, -3.5);
+            room.add(sink);
+
+            // Add a toilet
+            const toiletGeometry = new THREE.BoxGeometry(0.7, 0.5, 0.6);
+            const toiletMaterial = new THREE.MeshStandardMaterial({
+                color: "#fff",
+                roughness: 0.7
+            });
+            const toilet = new THREE.Mesh(toiletGeometry, toiletMaterial);
+            toilet.position.set(-2.5, -1.75, -3.5);
+            room.add(toilet);
+
+            // Add a shower
+            const showerGeometry = new THREE.BoxGeometry(1, 2, 0.1);
+            const showerMaterial = new THREE.MeshStandardMaterial({
+                color: "#ccc",
+                transparent: true,
+                opacity: 0.7,
+                roughness: 0.2
+            });
+            const shower = new THREE.Mesh(showerGeometry, showerMaterial);
+            shower.position.set(0, -1, -1.4);
+            room.add(shower);
+
+            // Add a water heater
+            const heaterGeometry = new THREE.BoxGeometry(0.6, 1.2, 0.4);
+            const heaterMaterial = new THREE.MeshStandardMaterial({
+                color: "#f5f5f5",
+                roughness: 0.4
+            });
+            const heater = new THREE.Mesh(heaterGeometry, heaterMaterial);
+            heater.position.set(3.5, -1.4, -1);
+            room.add(heater);
+
+            // Update furniture list
+            document.getElementById('furniture-list').textContent =
+                "Bathtub, sink, toilet, shower, water heater";
+        }
+
+        function createScreenEffect(screen) {
+            // Create a grid of rectangles to simulate a TV image
+            const rows = 10;
+            const cols = 16;
+            const cellWidth = 1.48 / cols;
+            const cellHeight = 0.78 / rows;
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const rectGeometry = new THREE.PlaneGeometry(cellWidth * 0.9, cellHeight * 0.9);
+                    const hue = Math.random() * 0.3 + 0.5; // Blueish hue
+                    const saturation = Math.random() * 0.3 + 0.4;
+                    const lightness = Math.random() * 0.3 + 0.3;
+                    const rectMaterial = new THREE.MeshBasicMaterial({
+                        color: new THREE.Color().setHSL(hue, saturation, lightness)
+                    });
+
+                    const rect = new THREE.Mesh(rectGeometry, rectMaterial);
+                    rect.position.set(
+                        (j - cols / 2 + 0.5) * cellWidth,
+                        (rows / 2 - i - 0.5) * cellHeight,
+                        0.001
+                    );
+
+                    screen.add(rect);
+                }
+            }
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('visualizer-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Initialize the scene when the page loads
+        window.onload = init;
+
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const controlsPanel = document.getElementById('controls-panel');
+        const closePanel = document.getElementById('close-panel');
+
+        mobileToggle.addEventListener('click', function () {
+            controlsPanel.classList.add('active');
+        });
+
+        closePanel.addEventListener('click', function () {
+            controlsPanel.classList.remove('active');
+        });
+
+        // UI Event Listeners
+        document.querySelectorAll('.room-option').forEach(option => {
+            option.addEventListener('click', function () {
+                document.querySelectorAll('.room-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                currentRoom = this.dataset.room;
+
+                switch (currentRoom) {
+                    case 'living':
+                        setupLivingRoom();
+                        break;
+                    case 'bedroom':
+                        // setupBedroom();
+                        break;
+                    case 'kitchen':
+                        setupKitchen();
+                        break;
+                    case 'bathroom':
+                        setupBathroom();
+                        break;
+                }
+            });
+        });
+
+        document.querySelectorAll('.surface-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.surface-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentSurface = this.dataset.surface;
+            });
+        });
+
+        document.querySelectorAll('.paint-type-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.paint-type-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentPaintType = this.dataset.paintType;
+
+                // Show/hide material selector
+                const materialSelector = document.getElementById('material-selector');
+                if (currentPaintType === "outdoor") {
+                    materialSelector.style.display = "flex";
+                } else {
+                    materialSelector.style.display = "none";
+                }
+            });
+        });
+
+        document.querySelectorAll('.material-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentMaterial = this.dataset.material;
+            });
+        });
+
+        document.querySelectorAll('.floor-option').forEach(option => {
+            option.addEventListener('click', function () {
+                document.querySelectorAll('.floor-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                currentFloorType = this.dataset.floorType;
+
+                // Reset pattern to first option when floor type changes
+                document.querySelectorAll('.pattern-option').forEach(p => p.classList.remove('active'));
+                document.querySelector('.pattern-option').classList.add('active');
+                currentPattern = document.querySelector('.pattern-option').dataset.pattern;
+
+                updateFloorMaterial();
+            });
+        });
+
+        document.querySelectorAll('.pattern-option').forEach(option => {
+            option.addEventListener('click', function () {
+                document.querySelectorAll('.pattern-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                currentPattern = this.dataset.pattern;
+                updateFloorMaterial();
+            });
+        });
+
+        document.querySelectorAll('.color-option').forEach(color => {
+            color.addEventListener('click', function () {
+                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentColor = this.dataset.color;
+                document.getElementById('current-color').textContent = currentColor.toUpperCase();
+
+                // Apply color to the appropriate surface
+                switch (currentSurface) {
+                    case "left-wall":
+                        leftWall.material.color.set(currentColor);
+                        break;
+                    case "right-wall":
+                        rightWall.material.color.set(currentColor);
+                        break;
+                    case "back-wall":
+                        // Update back wall color
+                        backWall.children.forEach(child => {
+                            if (child.material && child.material.color) {
+                                child.material.color.set(currentColor);
+                            }
+                        });
+                        break;
+                    case "ceiling":
+                        ceiling.material.color.set(currentColor);
+                        break;
+                    case "trim":
+                        trim.material.color.set(currentColor);
+                        break;
+                }
+            });
+        });
+
+        // Lighting controls
+        const lightSlider = document.getElementById('light-intensity');
+        lightSlider.addEventListener('input', function () {
+            const value = this.value;
+            document.querySelector('.light-value').textContent = value + "%";
+            lightIntensity = value / 100;
+
+            // Update ambient light intensity
+            scene.children.forEach(child => {
+                if (child instanceof THREE.AmbientLight) {
+                    child.intensity = 0.4 * lightIntensity;
+                }
+            });
+        });
+
+        document.querySelectorAll('.window-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.window-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                isDaytime = this.dataset.window === "day";
+
+                // Update window glass material
+                backWall.children.forEach(child => {
+                    if (child.material && child.material.opacity !== undefined) {
+                        child.material.color.set(isDaytime ? 0xa0d2ff : 0x111133);
+                        child.material.opacity = isDaytime ? 0.7 : 0.3;
+                        child.material.emissiveIntensity = isDaytime ? 0 : 0.3;
+                    }
+                });
+
+                // Update sunlight
+                sunLight.intensity = isDaytime ? 0.8 * lightIntensity : 0.1 * lightIntensity;
+                sunLight.color.set(isDaytime ? 0xffeedd : 0x222244);
+            });
+        });
+
+        // View controls
+        document.getElementById('reset-view').addEventListener('click', function () {
+            camera.position.set(0, 2, 5);
+            camera.lookAt(0, 0, 0);
+        });
+
+        document.getElementById('front-view').addEventListener('click', function () {
+            camera.position.set(0, 0, 5);
+            camera.lookAt(0, 0, 0);
+        });
+
+        document.getElementById('top-view').addEventListener('click', function () {
+            camera.position.set(0, 5, 0.1);
+            camera.lookAt(0, 0, 0);
+        });
+    </script>
+</body>
+
+</html>
